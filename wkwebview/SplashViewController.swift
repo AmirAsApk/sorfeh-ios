@@ -6,24 +6,59 @@
 //
 
 import UIKit
+import Network
 
 class SplashViewController: UIViewController {
-
+    
+    
+    var b :Bool=false
+    @IBOutlet weak var textView: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let monitor = NWPathMonitor()
+        
+        monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                print("We're connected!")
+                self.b=true
+            } else {
+                print("No connection.")
+                self.b=false
+            }
 
-        // Do any additional setup after loading the view.
+            print(path.isExpensive)
+        }
+        
+        let queue = DispatchQueue(label: "Monitor")
+        monitor.start(queue: queue)
+        let cellMonitor = NWPathMonitor(requiredInterfaceType: .cellular)
+        
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        if b {
+            gotoNext()
+        }else{
+            textView.text="خطا در اتصال لطفا دوباره تلاش کنید"
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func gotoNext() {
+        let defaults = UserDefaults.standard
+        let intro=defaults.bool(forKey: "intro")
+        if intro {
+            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let newViewController = storyBoard.instantiateViewController(withIdentifier: "webview") as! ViewController
+                    self.present(newViewController, animated: true, completion: nil)
+        }else{
+                let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                let newViewController = storyBoard.instantiateViewController(withIdentifier: "intro") as! IntroViewController
+                        self.present(newViewController, animated: true, completion: nil)
+        }
+        
+    
     }
-    */
-
+    
 }

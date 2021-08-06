@@ -11,21 +11,23 @@ import Foundation
 import AVFoundation
 
 
-class WebViewController: UIViewController, WKNavigationDelegate {
+class ViewController: UIViewController, WKNavigationDelegate {
   
     var webView: WKWebView!
     
     override func loadView() {
         webView = WKWebView()
         webView.navigationDelegate = self
-        view .addSubview(<#T##view: UIView##UIView#>)
+        view = webView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let url = URL(string: "https://sorfeh.com")!
+        let url = URL(string: "https://sorfeh.com/m")!
         webView.load(URLRequest(url: url))
+        
         webView.allowsBackForwardNavigationGestures = true
+        
     }
 }
 
